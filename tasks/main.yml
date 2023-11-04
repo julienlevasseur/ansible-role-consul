@@ -33,8 +33,6 @@
     timeout: "42"
   become: false
   tags: installation
-  run_once: true
-  ignore_errors: "{{ ansible_check_mode }}"
 
 - name: Unarchive and install Consul
   block:
@@ -47,7 +45,6 @@
       tags:
         - installation
         - skip_ansible_lint
-      run_once: true
   always:
     - name: Cleanup
       file:
@@ -57,7 +54,6 @@
       vars:
         ansible_become: false
       tags: installation
-      run_once: true
       ignore_errors: true
 
 - name: Generate gossip encryption key
