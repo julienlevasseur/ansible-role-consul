@@ -74,6 +74,7 @@
     string_type: "SecureString"
     key_id: "{{ kms_key_id }}"
     value: "{{ consul_token }}"
+    region: "us-east-1"
 
 - name: Create Consul Systemd Service
   ansible.builtin.template:
