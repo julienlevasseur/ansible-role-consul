@@ -2,6 +2,7 @@
 # defaults file for ansible-role-consul
 
 consul_version: "{{ lookup('env','CONSUL_VERSION') | default('latest', true) }}"
+consul_zip_url: "https://releases.hashicorp.com/consul/{{ consul_version }}/consul_{{ consul_version }}_{{ consul_os }}_{{ consul_architecture }}.zip"
 
 consul_architecture_map:
   # this first entry seems redundant
