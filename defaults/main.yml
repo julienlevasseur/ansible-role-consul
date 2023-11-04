@@ -1,0 +1,43 @@
+---
+# defaults file for ansible-role-consul
+
+consul_version: "{{ lookup('env','CONSUL_VERSION') | default('latest', true) }}"
+
+consul_architecture_map:
+  # this first entry seems redundant
+  # (but it's required for reasons)
+  amd64: amd64
+  x86_64: amd64
+  # todo: arm32 / armelv5
+  armv6l: armhfv6
+  armv7l: armhfv6
+  aarch64: arm64
+  # Used by Apple Silicon Macs
+  arm64: arm64
+  32-bit: "386"
+  64-bit: amd64
+consul_architecture: "{{ consul_architecture_map[ansible_architecture] }}"
+
+consul_pkg: "consul_{{ consul_version }}_{{ consul_os }}_{{ consul_architecture }}.zip"
+consul_os: "{{ ansible_system | lower }}"
+
+consul_bin_path: "/usr/local/bin"
+consul_config_path: "/etc/consul"
+
+consul_datacenter: "{{ lookup('env','CONSUL_DATACENTER') | default('dc1', true) }}"
+consul_datadir: /var/consul
+consul_log_level: "{{ lookup('env','CONSUL_LOG_LEVEL') | default('INFO', true) }}"
+consul_syslog_enable: "{{ lookup('env','CONSUL_SYSLOG_ENABLE') | default(false, true) }}"
+consul_server: true
+bootstrap_expect: 1
+
+consul_acl:
+  enabled: true
+  default_policy: deny
+  down_policy: extend-cache
+  enable_token_persistence: true
+  enable_token_replication: true
+
+bootstrap: true
+
+kms_key_id: "{{ lookup('env','KMS_KEY_ID') | default('', true) }}" # For SSM Consul Token SecureString

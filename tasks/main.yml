@@ -1,0 +1,113 @@
+---
+# tasks file for ansible-role-consul
+
+- name: Looking up latest version of Consul
+  set_fact:
+    consul_version: "{{ (lookup('url', 'https://api.github.com/repos/hashicorp/consul/releases/latest', split_lines=False) |
+                    from_json).get('tag_name') | replace('v', '') }}"
+
+- name: Ensure unzip is installed
+  ansible.builtin.package:
+    name: unzip
+    state: present
+
+- name: Download Consul package
+  get_url:
+    url: "{{ consul_zip_url }}"
+    dest: "/tmp/{{ consul_pkg }}"
+    timeout: "42"
+  become: false
+  tags: installation
+  run_once: true
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Unarchive and install Consul
+  block:
+    - name: Unarchive Consul package
+      unarchive:
+        src: "/tmp/{{ consul_pkg }}"
+        dest: "{{ consul_bin_path.path }}/"
+        creates: "{{ consul_bin_path }}/consul"
+      become: false
+      tags:
+        - installation
+        - skip_ansible_lint
+      run_once: true
+  always:
+    - name: Cleanup
+      file:
+        path: "/tmp/{{ consul_pkg }}"
+        state: "absent"
+      become: false
+      vars:
+        ansible_become: false
+      tags: installation
+      run_once: true
+      ignore_errors: true
+
+- name: Generate gossip encryption key
+  shell: "{{ consul_bin_path }}/consul keygen"
+  register: consul_keygen
+
+- name: Generate Consul Token
+  shell: uuidgen
+  register: consul_token
+
+- name: Save Consul Token to SSM
+  community.aws.ssm_parameter:
+    name: "consul-token-ansible_hostname"
+    string_type: "SecureString"
+    key_id: "{{ kms_key_id }}"
+    value: "{{ consul_token }}"
+
+- name: Create Consul Systemd Service
+  ansible.builtin.template:
+    src: /templates/consul.service.j2
+    dest: /lib/systemd/system/consul.service
+    owner: bin
+    group: wheel
+    mode: '0644'
+  register: systemd_unit
+
+- name: Reload systemd
+  systemd:
+    daemon_reload: true
+  when: systemd_unit is changed
+
+- name: Enable consul at startup (systemd)
+  systemd:
+    name: consul
+    enabled: true
+
+- name: Create Consul Configuration
+  ansible.builtin.template:
+    src: /templates/config.json.j2
+    dest: "{{ consul_config_path  }}/config.json"
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+
+- name: Start consul service
+  block:
+
+    - name: Start Consul
+      service:
+        name: consul
+        state: started
+        enabled: true
+        # Needed to force SysV service manager on Docker for Molecule tests
+        use: "{{ ansible_service_mgr }}"
+
+    - name: Check Consul HTTP API (via TCP socket)
+      wait_for:
+        delay: 15
+        port: "{{ consul_ports.http|int }}"
+        host: "{{ consul_addresses.http }}"
+      when: (consul_ports.http|int > -1) and (consul_addresses.http|ansible.utils.ipaddr)
+
+    - name: Check Consul HTTP API (via unix socket)
+      wait_for:
+        delay: 15
+        path: "{{ consul_addresses.http | replace('unix://', '', 1) }}"
+      when: consul_addresses.http is match("unix://*")
