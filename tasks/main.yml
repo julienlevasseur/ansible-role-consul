@@ -63,7 +63,7 @@
 
 - name: Create Consul Configuration folder
   ansible.builtin.file:
-    path: consul_config_path
+    path: "{{ consul_config_path }}"
     state: directory
     mode: '0755'
 
