@@ -41,6 +41,7 @@
         src: "/tmp/{{ consul_pkg }}"
         dest: "{{ consul_bin_path }}/"
         creates: "{{ consul_bin_path }}/consul"
+        remote_src: yes
       become: false
       tags:
         - installation
