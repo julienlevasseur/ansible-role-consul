@@ -61,6 +61,12 @@
   shell: "{{ consul_bin_path }}/consul keygen"
   register: consul_keygen
 
+- name: Create Consul Configuration folder
+  ansible.builtin.file:
+    path: consul_config_path
+    state: directory
+    mode: '0755'
+
 - name: Generate Consul Token
   shell: uuidgen > "{{ consul_config_path  }}/consul.token"
   #register: consul_token
