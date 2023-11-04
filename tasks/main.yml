@@ -18,13 +18,13 @@
     state: present
 
 - name: Install boto dependencies
-      ansible.builtin.pip:
-        name:
-          - boto3
-          - botocore
-      environment:
-        PIP_BREAK_SYSTEM_PACKAGES: 1
-      become: true
+  ansible.builtin.pip:
+    name:
+      - boto3
+      - botocore
+  environment:
+    PIP_BREAK_SYSTEM_PACKAGES: 1
+  become: true
 
 - name: Download Consul package
   get_url:
