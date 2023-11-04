@@ -70,7 +70,7 @@
     name: "consul-token-ansible_hostname"
     string_type: "SecureString"
     key_id: "{{ kms_key_id }}"
-    value: "{{ consul_token.stdout }}"
+    value: "{{ consul_token.stdout_lines[0] }}"
     region: "us-east-1"
   become_user: ubuntu
 
