@@ -42,7 +42,7 @@
         dest: "{{ consul_bin_path }}/"
         creates: "{{ consul_bin_path }}/consul"
         remote_src: yes
-      become: false
+      become: true
       tags:
         - installation
         - skip_ansible_lint
