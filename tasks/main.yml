@@ -45,16 +45,16 @@
       tags:
         - installation
         - skip_ansible_lint
-  always:
-    - name: Cleanup
-      file:
-        path: "/tmp/{{ consul_pkg }}"
-        state: "absent"
-      become: false
-      vars:
-        ansible_become: false
-      tags: installation
-      ignore_errors: true
+#  always:
+#    - name: Cleanup
+#      file:
+#        path: "/tmp/{{ consul_pkg }}"
+#        state: "absent"
+#      become: false
+#      vars:
+#        ansible_become: false
+#      tags: installation
+#      ignore_errors: true
 
 - name: Generate gossip encryption key
   shell: "{{ consul_bin_path }}/consul keygen"
