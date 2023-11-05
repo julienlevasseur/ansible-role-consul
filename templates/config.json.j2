@@ -1,21 +1,21 @@
 {
-    "datacenter": "{{ consul_datacenter }}",
-    "data_dir": "{{ consul_datadir }}",
-    "encrypt": "{{ consul_keygen.stdout }}",
-    "log_level": "{{ consul_log_level }}",
-    "enable_syslog": {{ consul_syslog_enable | bool | to_json }},
-    "node_name": "{{ ansible_hostname }}",
-    "server": {{ consul_server | bool | to_json }},
-    "bootstrap_expect": {{ bootstrap_expect | int }},
-    "acl": {
-      "enabled": {{ consul_acl.enabled | bool | to_json }},
-      "default_policy": "{{ consul_acl.default_policy }}",
-      "down_policy": "{{ consul_acl.down_policy }}",
-      "enable_token_persistence": {{ consul_acl.enable_token_persistence |bool | to_json }},
-      "enable_token_replication": {{ consul_acl.enable_token_replication |bool | to_json }},
-      "tokens": {
-        "master": "{{ consul_token }}",
-      }
-    },
-    "bootstrap": {{ bootstrap |bool | to_json  }}
-  }
+  "datacenter": "{{ consul_datacenter }}",
+  "data_dir": "{{ consul_datadir }}",
+  "encrypt": "{{ consul_keygen.stdout }}",
+  "log_level": "{{ consul_log_level }}",
+  "enable_syslog": {{ consul_syslog_enable | bool | to_json }},
+  "node_name": "{{ ansible_hostname }}",
+  "server": {{ consul_server | bool | to_json }},
+  "bootstrap_expect": {{ bootstrap_expect | int }},
+  "acl": {
+    "enabled": {{ consul_acl.enabled | bool | to_json }},
+    "default_policy": "{{ consul_acl.default_policy }}",
+    "down_policy": "{{ consul_acl.down_policy }}",
+    "enable_token_persistence": {{ consul_acl.enable_token_persistence |bool | to_json }},
+    "enable_token_replication": {{ consul_acl.enable_token_replication |bool | to_json }},
+    "tokens": {
+      "master": "{{ consul_token }}",
+    }
+  },
+  "bootstrap": {{ bootstrap |bool | to_json  }}
+}
