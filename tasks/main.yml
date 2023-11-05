@@ -70,11 +70,10 @@
 - name: Generate Consul Token
   shell: uuidgen > "{{ consul_config_path  }}/consul.token"
   run_once: true
-  register: consul_token
 
 - name: Set Consul Token as fact
   set_fact:
-    consul_token: "{{ consul_token.stdout }}"
+    consul_token: "{{lookup('ansible.builtin.file', '/etc/consul/consul.token') }}"
 
 - name: Create Consul Systemd Service
   ansible.builtin.template:
