@@ -79,6 +79,7 @@
     owner: bin
     group: wheel
     mode: '0644'
+    remote_src: yes
   register: systemd_unit
 
 - name: Reload systemd
