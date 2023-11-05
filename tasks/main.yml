@@ -121,4 +121,5 @@
     key_id: "{{ kms_key_id }}"
     value: "{{lookup('ansible.builtin.file', '/etc/consul/consul.token') }}"
     region: "us-east-1"
+    remote_src: yes
   become_user: ubuntu
