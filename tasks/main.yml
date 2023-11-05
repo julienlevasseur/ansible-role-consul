@@ -114,12 +114,6 @@
         state: started
         enabled: true
 
-    - name: Check Consul HTTP API (via unix socket)
-      wait_for:
-        delay: 15
-        path: "{{ consul_addresses.http | replace('unix://', '', 1) }}"
-      when: consul_addresses.http is match("unix://*")
-
 - name: Save Consul Token to SSM
   community.aws.ssm_parameter:
     name: "consul-token-ansible_hostname"
