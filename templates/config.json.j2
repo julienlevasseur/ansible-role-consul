@@ -14,7 +14,7 @@
       "enable_token_persistence": {{ consul_acl.enable_token_persistence |bool | to_json }},
       "enable_token_replication": {{ consul_acl.enable_token_replication |bool | to_json }},
       "tokens": {
-        "master": "{{ consul_token }}",
+        "master": "{{ consul_token.stdout }}",
       }
     },
     "bootstrap": {{ bootstrap |bool | to_json  }}
