@@ -69,16 +69,8 @@
 
 - name: Generate Consul Token
   shell: uuidgen > "{{ consul_config_path  }}/consul.token"
+  run_once: true
   #register: consul_token
-
-- name: Save Consul Token to SSM
-  community.aws.ssm_parameter:
-    name: "consul-token-ansible_hostname"
-    string_type: "SecureString"
-    key_id: "{{ kms_key_id }}"
-    value: "{{lookup('ansible.builtin.file', '/etc/consul/consul.token') }}"
-    region: "us-east-1"
-  become_user: ubuntu
 
 - name: Create Consul Systemd Service
   ansible.builtin.template:
@@ -131,3 +123,12 @@
         delay: 15
         path: "{{ consul_addresses.http | replace('unix://', '', 1) }}"
       when: consul_addresses.http is match("unix://*")
+
+- name: Save Consul Token to SSM
+  community.aws.ssm_parameter:
+    name: "consul-token-ansible_hostname"
+    string_type: "SecureString"
+    key_id: "{{ kms_key_id }}"
+    value: "{{lookup('ansible.builtin.file', '/etc/consul/consul.token') }}"
+    region: "us-east-1"
+  become_user: ubuntu
