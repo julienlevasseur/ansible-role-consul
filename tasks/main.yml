@@ -74,7 +74,7 @@
 
 - name: Create Consul Systemd Service
   ansible.builtin.template:
-    src: /templates/consul.service.j2
+    src: templates/consul.service.j2
     dest: /lib/systemd/system/consul.service
     owner: bin
     group: wheel
