@@ -71,9 +71,9 @@
   shell: uuidgen > "{{ consul_config_path  }}/consul.token"
   run_once: true
 
-- name: Set Consul Token as fact
-  set_fact:
-    consul_token: "{{lookup('ansible.builtin.file', '/etc/consul/consul.token') }}"
+#- name: Set Consul Token as fact
+#  set_fact:
+#    consul_token: "{{lookup('ansible.builtin.file', '/etc/consul/consul.token') }}"
 
 - name: Create Consul Systemd Service
   ansible.builtin.template:
@@ -119,7 +119,7 @@
     name: "consul-token-ansible_hostname"
     string_type: "SecureString"
     key_id: "{{ kms_key_id }}"
-    value: "{{lookup('ansible.builtin.file', '/etc/consul/consul.token') }}"
+    value: "{{ consul_token }}"
     region: "us-east-1"
     remote_src: yes
   become_user: ubuntu
