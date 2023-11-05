@@ -72,6 +72,10 @@
   run_once: true
   register: consul_token
 
+- name: Set Consul Token as fact
+  set_fact:
+    consul_token: "{{ consul_token.stdout }}"
+
 - name: Create Consul Systemd Service
   ansible.builtin.template:
     src: templates/consul.service.j2
