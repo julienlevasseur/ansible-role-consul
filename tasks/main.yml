@@ -74,6 +74,7 @@
 - name: Set Consul Token as fact
   set_fact:
     consul_token: "{{lookup('ansible.builtin.file', '/etc/consul/consul.token') }}"
+    remote_src: yes
 
 - name: Create Consul Systemd Service
   ansible.builtin.template:
