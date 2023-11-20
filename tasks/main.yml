@@ -116,3 +116,4 @@
     key_id: "{{ kms_key_id }}"
     value: "{{ consul_token }}"
     region: "us-east-1"
+  run_once: true
