@@ -109,11 +109,11 @@
         state: started
         enabled: true
 
-- name: Save Consul Token to SSM
-  community.aws.ssm_parameter:
-    name: "consul-token-{{ inventory_hostname }}"
-    string_type: "SecureString"
-    key_id: "{{ kms_key_id }}"
-    value: "{{ consul_token }}"
-    region: "us-east-1"
-  run_once: true
+# - name: Save Consul Token to SSM
+#   community.aws.ssm_parameter:
+#     name: "consul-token-{{ inventory_hostname }}"
+#     string_type: "SecureString"
+#     key_id: "{{ kms_key_id }}"
+#     value: "{{ consul_token }}"
+#     region: "us-east-1"
+#   run_once: true
