@@ -111,9 +111,8 @@
 
 - name: Save Consul Token to SSM
   community.aws.ssm_parameter:
-    name: "consul-token-ansible_hostname"
+    name: "consul-token-{{ inventory_hostname }}"
     string_type: "SecureString"
     key_id: "{{ kms_key_id }}"
     value: "{{ consul_token }}"
     region: "us-east-1"
-  become: true
