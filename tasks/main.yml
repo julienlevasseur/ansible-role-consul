@@ -17,11 +17,12 @@
     name: python3
     state: present
 
-- name: Install boto dependencies
+- name: Install role dependencies
   ansible.builtin.pip:
     name:
       - boto3
       - botocore
+      - python-consul
   environment:
     PIP_BREAK_SYSTEM_PACKAGES: 1
   become: true
